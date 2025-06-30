@@ -6,7 +6,9 @@ export const useWebSocket = (siteIds?: string[]): DataPoint[] => {
   const wsRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:8080");
+    const ws = new WebSocket(
+      "wss://sonar-lab-server-8881cb834ac4.herokuapp.com/"
+    );
     wsRef.current = ws;
 
     ws.onmessage = (event) => {
@@ -27,16 +29,12 @@ export const useWebSocket = (siteIds?: string[]): DataPoint[] => {
   useEffect(() => {
     if (!siteIds) return;
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-      wsRef.current.send(
-        JSON.stringify({ type: "filter", siteIds })
-      );
+      wsRef.current.send(JSON.stringify({ type: "filter", siteIds }));
     } else {
       // Optionally wait and retry when socket isn't open yet
       const interval = setInterval(() => {
         if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-          wsRef.current.send(
-            JSON.stringify({ type: "filter", siteIds })
-          );
+          wsRef.current.send(JSON.stringify({ type: "filter", siteIds }));
           clearInterval(interval);
         }
       }, 100);
