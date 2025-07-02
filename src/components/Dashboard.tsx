@@ -8,8 +8,11 @@ import SiteFilter from "./SiteFilter";
 import { useSearchParams } from "react-router-dom";
 import { exportCSV, exportPDF } from "../utils/exportUtils";
 import { trimMetrics } from "../utils/trimMatrics";
-
+import { useAuth } from "../authentication/useAuth";
 function Dashboard() {
+  const { role,user, logout } = useAuth();
+  console.log(role);
+  const canDownload = role === "admin";
   const [searchParams, setSearchParams] = useSearchParams();
   const initialSiteIds = searchParams.get("sites")
     ? searchParams.get("sites")!.split(",")
@@ -122,6 +125,23 @@ function Dashboard() {
 
   return (
     <div className="p-4 space-y-6">
+         <div className="flex justify-end">
+      {user ? (
+        <button
+          onClick={logout}
+          className="bg-gray-800 text-white px-4 py-2 rounded"
+        >
+          Logout ({user.email})
+        </button>
+      ) : (
+        <a
+          href="/login"
+          className="bg-blue-600 text-white px-4 py-2 rounded"
+        >
+          Login
+        </a>
+      )}
+    </div>
       <SiteFilter
         sites={uniqueSites}
         selectedSiteIds={siteIds}
@@ -160,57 +180,61 @@ function Dashboard() {
       />
 
       <div className="flex gap-4">
-        <button
-          onClick={() => exportCSV(lineChartData, "page_views")}
-          className="bg-green-600 text-white px-4 py-2 rounded"
-        >
-          Export Page Views CSV
-        </button>
-        <button
-          onClick={() => exportPDF(lineChartData, "page_views", "Page Views")}
-          className="bg-red-600 text-white px-4 py-2 rounded"
-        >
-          Export Page Views PDF
-        </button>
-        <button
-          onClick={() => exportCSV(barChartData, "top_pages")}
-          className="bg-green-600 text-white px-4 py-2 rounded"
-        >
-          Export Top Pages CSV
-        </button>
-        <button
-          onClick={() => exportPDF(barChartData, "top_pages", "Top Pages")}
-          className="bg-red-600 text-white px-4 py-2 rounded"
-        >
-          Export Top Pages PDF
-        </button>
-        <button
-          onClick={() => exportCSV(heatMapData, "user_flow")}
-          className="bg-green-600 text-white px-4 py-2 rounded"
-        >
-          Export User Flow CSV
-        </button>
-        <button
-          onClick={() => exportPDF(heatMapData, "user_flow", "User Flow")}
-          className="bg-red-600 text-white px-4 py-2 rounded"
-        >
-          Export User Flow PDF
-        </button>
-        <button
-          onClick={() => exportCSV(trimMetrics(allData), "all_data_summary")}
-          className="bg-green-600 text-white px-4 py-2 rounded"
-        >
-          Export Summary CSV
-        </button>
+        {canDownload && (
+          <>
+            <button
+              onClick={() => exportCSV(lineChartData, "page_views")}
+              className="bg-green-600 text-white px-4 py-2 rounded"
+            >
+              Export Page Views CSV
+            </button>
+            <button
+              onClick={() => exportPDF(lineChartData, "page_views", "Page Views")}
+              className="bg-red-600 text-white px-4 py-2 rounded"
+            >
+              Export Page Views PDF
+            </button>
+            <button
+              onClick={() => exportCSV(barChartData, "top_pages")}
+              className="bg-green-600 text-white px-4 py-2 rounded"
+            >
+              Export Top Pages CSV
+            </button>
+            <button
+              onClick={() => exportPDF(barChartData, "top_pages", "Top Pages")}
+              className="bg-red-600 text-white px-4 py-2 rounded"
+            >
+              Export Top Pages PDF
+            </button>
+            <button
+              onClick={() => exportCSV(heatMapData, "user_flow")}
+              className="bg-green-600 text-white px-4 py-2 rounded"
+            >
+              Export User Flow CSV
+            </button>
+            <button
+              onClick={() => exportPDF(heatMapData, "user_flow", "User Flow")}
+              className="bg-red-600 text-white px-4 py-2 rounded"
+            >
+              Export User Flow PDF
+            </button>
+            <button
+              onClick={() => exportCSV(trimMetrics(allData), "all_data_summary")}
+              className="bg-green-600 text-white px-4 py-2 rounded"
+            >
+              Export Summary CSV
+            </button>
 
-        <button
-          onClick={() =>
-            exportPDF(trimMetrics(allData), "all_data_summary", "Summary")
-          }
-          className="bg-red-600 text-white px-4 py-2 rounded"
-        >
-          Export Summary PDF
-        </button>
+            <button
+              onClick={() =>
+                exportPDF(trimMetrics(allData), "all_data_summary", "Summary")
+              }
+              className="bg-red-600 text-white px-4 py-2 rounded"
+            >
+              Export Summary PDF
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
