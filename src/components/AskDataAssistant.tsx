@@ -1,8 +1,12 @@
 // src/components/AskDataAssistant.jsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { queryDashboardAI } from "../services/useDashboardAI";
 
-function AskDataAssistant({ dashboardData }) {
+interface AskDataAssistantProps {
+  dashboardData: any; // Replace 'any' with a more specific type if available
+}
+
+function AskDataAssistant({ dashboardData }: AskDataAssistantProps) {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [loading, setLoading] = useState(false);
@@ -18,11 +22,10 @@ function AskDataAssistant({ dashboardData }) {
   };
 
   return (
-    <div className="p-4 bg-white rounded shadow-md mt-4">
-      <h2 className="text-xl font-semibold mb-2">Ask About Your Data</h2>
+    <div className="p-4 bg-white rounded shadow">
       <textarea
         className="w-full border p-2 rounded mb-2"
-        rows="3"
+        rows={3}
         placeholder="Ask something like 'Which site had the highest traffic last week?'"
         value={question}
         onChange={(e) => setQuestion(e.target.value)}

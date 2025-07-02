@@ -1,7 +1,7 @@
 // src/services/queryDashboardAI.js or .ts
 const BASE_URL = "https://sonar-lab-server-8881cb834ac4.herokuapp.com";
 
-export async function queryDashboardAI({ prompt, data }) {
+export async function queryDashboardAI({ prompt, data }: { prompt: string; data: any }) {
   console.log("📦 Data received:", data);
   console.log("🧠 Prompt received:", prompt);
 

@@ -2,7 +2,11 @@
 import { useState } from "react";
 import { queryDashboardAI } from "../services/useDashboardAI";
 
-function SummaryBox({ dashboardData }) {
+type SummaryBoxProps = {
+  dashboardData: any; // Replace 'any' with a more specific type if available
+};
+
+function SummaryBox({ dashboardData }: SummaryBoxProps) {
   const [summary, setSummary] = useState("");
   const [loading, setLoading] = useState(false);
   console.log(dashboardData);
