@@ -17,6 +17,8 @@ export const useWebSocket = ({
     const ws = new WebSocket(
       "wss://sonar-lab-server-8881cb834ac4.herokuapp.com/"
     );
+    //const ws = new WebSocket("ws://localhost:8080");
+
     wsRef.current = ws;
 
     ws.onmessage = (event) => {
